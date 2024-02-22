@@ -9,8 +9,6 @@
   <script type="module" src="https://static.cloud.coveo.com/atomic/v2/atomic.esm.js"></script>
   <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"/>
   <link rel="stylesheet" href="original_styles.css">
-  <script type="module" src="index.js"></script>
-  <link rel="stylesheet" href="new.css">
 
   <script type="module">
     import {
@@ -18,27 +16,56 @@
       loadSearchActions,
       loadSearchAnalyticsActions
     } from 'https://static.cloud.coveo.com/atomic/v2/headless/headless.esm.js';
-  
+
+    // first make sure that engine is initalized
     let headlessEngine;
+
     (async () => {
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
-  
-      searchInterface.querySelector('.this-year-button').addEventListener('click', filterFor2022);
-  
+
       await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples'
       });
-      
-      headlessEngine = searchInterface.engine;
+
+      const headlessEngine = searchInterface.engine;
+
+      const searchActions = loadSearchActions(headlessEngine);
+
+      function filterFor2022(e) {
+        console.log("Filter for 2022 clicked");
+        // Load the necessary actions from the headless library
+        const { updateAdvancedSearchQueries } = loadAdvancedSearchQueryActions(headlessEngine);
+        const { logStaticFilterSelect } = loadSearchAnalyticsActions(headlessEngine);
+
+        // Dispatch the action to update the advanced query to filter for 2022 content
+        headlessEngine.dispatch(updateAdvancedSearchQueries({aq: '@year=2022'}));
+
+        // Log an analytics event to record the action of filtering for 2022 content
+        headlessEngine.dispatch(logStaticFilterSelect({
+          evt: 'filterFor2022', // Event type
+          metadata: {
+            description: 'Filter content for the year 2022'
+          }
+      }));
+
+      // Execute the search with the updated query
+      headlessEngine.dispatch(searchActions.executeSearch(logStaticFilterSelect({
+        evt: 'executeSearch',
+        metadata: { description: 'Search executed with 2022 filter' }
+    })));
+}
+
+      // Ensure this is inside the async function after headlessEngine initialization
+      document.querySelector('.this-year-button').addEventListener('click', filterFor2022);
+
+      // Trigger first search
       searchInterface.executeFirstSearch();
     })();
+
   
-    function filterFor2022(e) {
-      // Implementation for Task #2
-    }
-  
+    // Adding Top Result to Top result !! Does not work yet! 
     document.addEventListener('afterComponentsInitialization', () => {
       setTimeout(() => {
         const results = document.querySelectorAll('atomic-result');
@@ -59,15 +86,7 @@
 <body>
   <atomic-search-interface  fields-to-include='["snrating","sncost","ytvideoduration","ytthumbnailurl"]'>
     <div class="header-bg"></div>
-    <!-- Added Badge Component -->
-    <div class="CoveoPromotedResultsBadge"
-    data-show-badge-for-featured-results="true"
-    data-caption-for-featured="Featured"
-    data-color-for-featured-results="orange"
-    data-show-badge-for-recommended-results="true"
-    data-caption-for-recommended="Top Result"
-    data-color-for-recommended-results="green"></div>
-    
+  
     <atomic-search-box></atomic-search-box>
     <div class="this-year-button">Filter for 2022 Content</div>
     <atomic-facet-manager>
@@ -107,7 +126,8 @@
          <!-- YOUTUBE template only -->
         <atomic-result-template must-match-filetype="YouTubeVideo">
           <template>
-            
+
+            <!-- Style For Youtube Specific elements -->
             <style>
               /* Merged and refined YouTube Result Template Customization */
               .youtube-result {
@@ -223,7 +243,8 @@
                 <img src="dog.jpeg" alt="YouTube Thumbnail">
               </div>
               <div class="duration">
-                Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text> sec
+                <!-- So I dont know why this does not render text, so I put a placeholder number -->
+                Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text> 200 sec
               </div>
               <div class="uri">
                 <atomic-result-link default="test"></atomic-result-link>
