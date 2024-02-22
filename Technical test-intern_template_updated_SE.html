@@ -86,39 +86,67 @@
           <template>
             <style>
               .youtube-result {
-                border: 1px solid #ff0000; /* YouTube's brand red */
+                display: grid;
+                grid-template-areas: 
+                  "badge date"
+                  "title thumbnail"
+                  "excerpt thumbnail"
+                  "duration thumbnail"
+                  "uri uri";
+                grid-template-columns: 1fr auto;
+                gap: 10px;
+                border: 1px solid #ccc;
                 padding: 10px;
-                margin-bottom: 20px;
                 border-radius: 8px;
-                background-color: #000000; /* YouTube's background color */
-                color: #ffffff; /* Text color for better readability on dark background */
+                background-color: #fff;
               }
-              .youtube-result h3 {
-                color: #ff0000; /* Titles in YouTube red for emphasis */
-              }
-              .youtube-result .metadata {
-                color: #ffffff; /* Metadata text color */
-                margin-top: 5px;
-              }
-              .youtube-thumbnail {
-                width: 100%;
-                border-radius: 4px;
-                margin-bottom: 10px;
+        
+              .badge { grid-area: badge; }
+              .date { grid-area: date; text-align: right; }
+              .title { grid-area: title; }
+              .excerpt { grid-area: excerpt; }
+              .thumbnail { grid-area: thumbnail; width: 120px; height: 90px; object-fit: cover; }
+              .duration { grid-area: duration; }
+              .uri { grid-area: uri; }
+        
+              @media (max-width: 600px) {
+                .youtube-result {
+                  grid-template-areas:
+                    "badge"
+                    "date"
+                    "title"
+                    "excerpt"
+                    "duration"
+                    "thumbnail"
+                    "uri";
+                  grid-template-columns: 1fr;
+                }
+                .thumbnail { width: 100%; height: auto; }
               }
             </style>
             <div class="youtube-result">
-              <atomic-result-section-visual>
-                <img src="{{ytthumbnailurl}}" class="youtube-thumbnail" />
-              </atomic-result-section-visual>
-              <atomic-result-section-title>
-                <h3><atomic-result-link></atomic-result-link></h3>
-              </atomic-result-section-title>
-              <atomic-result-section-bottom-metadata>
-                <div class="metadata">Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text></div>
-                <div class="metadata">Views: <atomic-result-number field="ytviewcount"></atomic-result-number></div>
-                <div class="metadata">Likes: <atomic-result-number field="ytlikecount"></atomic-result-number></div>
-                <!-- Add more YouTube specific metadata here -->
-              </atomic-result-section-bottom-metadata>
+              <div class="badge">
+                <!-- Conditionally render badge if top result or featured -->
+                <atomic-result-badge label="Featured" class="featured-badge"></atomic-result-badge>
+              </div>
+              <div class="date">
+                <atomic-result-date format="MMMM DD, YYYY"></atomic-result-date>
+              </div>
+              <div class="title">
+                <atomic-result-link></atomic-result-link>
+              </div>
+              <div class="excerpt">
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </div>
+              <div class="thumbnail">
+                <img src="{{ytthumbnailurl}}" alt="YouTube Thumbnail">
+              </div>
+              <div class="duration">
+                Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text> sec
+              </div>
+              <div class="uri">
+                <atomic-result-link></atomic-result-link>
+              </div>
             </div>
           </template>
         </atomic-result-template>
