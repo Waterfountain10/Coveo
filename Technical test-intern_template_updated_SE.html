@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://static.cloud.coveo.com/atomic/v2/themes/coveo.css"/>
   <link rel="stylesheet" href="original_styles.css">
   <script type="module" src="index.js"></script>
+  <link rel="stylesheet" href="new.css">
 
   <script type="module">
     import {
@@ -17,36 +18,56 @@
       loadSearchActions,
       loadSearchAnalyticsActions
     } from 'https://static.cloud.coveo.com/atomic/v2/headless/headless.esm.js';
-
+  
     let headlessEngine;
     (async () => {
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
-
+  
       searchInterface.querySelector('.this-year-button').addEventListener('click', filterFor2022);
-
-      // Initialization
+  
       await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples'
       });
       
       headlessEngine = searchInterface.engine;
-      // Trigger a first search
       searchInterface.executeFirstSearch();
     })();
-
+  
     function filterFor2022(e) {
-      // TODO: Task #2
+      // Implementation for Task #2
     }
-
+  
+    document.addEventListener('afterComponentsInitialization', () => {
+      setTimeout(() => {
+        const results = document.querySelectorAll('atomic-result');
+        if (results.length > 0) {
+          results.forEach((element, index) => {
+            element.classList.remove('top-result'); // Ensure only the first result gets the class
+          });
+          // Apply 'top-result' class to the first result
+          results[0].classList.add('top-result');
+        }
+      }, 1000); // Adjust timing as needed
+    });
   </script>
+  
 
 </head>
 
 <body>
   <atomic-search-interface  fields-to-include='["snrating","sncost","ytvideoduration","ytthumbnailurl"]'>
     <div class="header-bg"></div>
+    <!-- Added Badge Component -->
+    <div class="CoveoPromotedResultsBadge"
+    data-show-badge-for-featured-results="true"
+    data-caption-for-featured="Featured"
+    data-color-for-featured-results="orange"
+    data-show-badge-for-recommended-results="true"
+    data-caption-for-recommended="Top Result"
+    data-color-for-recommended-results="green"></div>
+    
     <atomic-search-box></atomic-search-box>
     <div class="this-year-button">Filter for 2022 Content</div>
     <atomic-facet-manager>
@@ -81,49 +102,137 @@
     <div class="results">
       <atomic-did-you-mean></atomic-did-you-mean>
       <atomic-result-list >
- 
+
+         <!-- TODO: Task #1 -->
+         <!-- YOUTUBE template only -->
         <atomic-result-template must-match-filetype="YouTubeVideo">
           <template>
+            
             <style>
+              /* Merged and refined YouTube Result Template Customization */
               .youtube-result {
-                border: 1px solid #ff0000; /* YouTube's brand red */
-                padding: 10px;
-                margin-bottom: 20px;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-rows: auto;
+                grid-template-areas: 
+                  "badge date"
+                  "title thumbnail"
+                  "excerpt thumbnail"
+                  "duration thumbnail"
+                  "uri uri";
+                border: 1px solid #ddd;
+                padding: 16px;
+                margin-bottom: 16px;
                 border-radius: 8px;
-                background-color: #000000; /* YouTube's background color */
-                color: #ffffff; /* Text color for better readability on dark background */
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                gap: 10px; /* Adjust spacing between grid items */
               }
-              .youtube-result h3 {
-                color: #ff0000; /* Titles in YouTube red for emphasis */
-              }
-              .youtube-result .metadata {
-                color: #ffffff; /* Metadata text color */
-                margin-top: 5px;
-              }
-              .youtube-thumbnail {
-                width: 100%;
+
+              .youtube-result .badge {
+                grid-area: badge;
+                /* Example Badge Styling */
+                background-color: #007bff;
+                color: #fff;
+                padding: 4px 8px;
                 border-radius: 4px;
-                margin-bottom: 10px;
+                font-size: 0.75rem;
+                text-align: center;
               }
+
+              .youtube-result .date {
+                grid-area: date;
+                justify-self: end;
+                font-size: 0.8rem;
+                color: #666;
+              }
+
+              .youtube-result .title {
+                grid-area: title;
+                font-weight: bold;
+                color: #007bff;
+              }
+
+              .youtube-result .excerpt {
+                grid-area: excerpt;
+                font-size: 0.9rem;
+                color: #333;
+              }
+
+              .youtube-result .thumbnail {
+                grid-area: thumbnail;
+                width: 120px;
+                height: 90px;
+                object-fit: cover;
+                justify-self: end;
+              }
+
+              .youtube-result .duration, .youtube-result .uri {
+                font-size: 0.8rem;
+                color: #666;
+              }
+
+              .youtube-result .duration {
+                grid-area: duration;
+              }
+
+              .youtube-result .uri {
+                grid-area: uri;
+                text-decoration: underline;
+                color: #007bff;
+                cursor: pointer;
+              }
+
+              /* Responsive Design Adjustments */
+              @media (max-width: 768px) {
+                .youtube-result {
+                  grid-template-columns: 1fr;
+                  grid-template-areas: 
+                    "badge"
+                    "date"
+                    "title"
+                    "excerpt"
+                    "duration"
+                    "thumbnail"
+                    "uri";
+                }
+                .youtube-result .thumbnail {
+                  width: 100%;
+                  height: auto;
+                  order: -1; /* Thumbnail moves to the top */
+                }
+              }
+
             </style>
+
             <div class="youtube-result">
-              <atomic-result-section-visual>
-                <img src="{{ytthumbnailurl}}" class="youtube-thumbnail" />
-              </atomic-result-section-visual>
-              <atomic-result-section-title>
-                <h3><atomic-result-link></atomic-result-link></h3>
-              </atomic-result-section-title>
-              <atomic-result-section-bottom-metadata>
-                <div class="metadata">Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text></div>
-                <div class="metadata">Views: <atomic-result-number field="ytviewcount"></atomic-result-number></div>
-                <div class="metadata">Likes: <atomic-result-number field="ytlikecount"></atomic-result-number></div>
-                <!-- Add more YouTube specific metadata here -->
-              </atomic-result-section-bottom-metadata>
+              <div>
+                <!-- Conditionally render badge if top result or featured -->
+                <atomic-result-badge label="Top Result" ></atomic-result-badge>
+              </div>
+              <div class="date">
+                <atomic-result-date format="MMMM DD, YYYY"></atomic-result-date>
+              </div>
+              <div class="title">
+                <atomic-result-link ></atomic-result-link>
+              </div>
+              <div class="excerpt">
+                <atomic-result-text field="excerpt"></atomic-result-text>
+              </div>
+              <div class="thumbnail">
+                <img src="dog.jpeg" alt="YouTube Thumbnail">
+              </div>
+              <div class="duration">
+                Duration: <atomic-result-text field="ytvideoduration"></atomic-result-text> sec
+              </div>
+              <div class="uri">
+                <atomic-result-link default="test"></atomic-result-link>
+              </div>
             </div>
           </template>
         </atomic-result-template>
 
-        <!-- TODO: Task #1 -->
+        <!-- Original templates below -->
         <atomic-result-template>
           <template>
             <style>

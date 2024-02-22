@@ -26,7 +26,7 @@ Your first task will be to create a custom YouTube result template. The hard req
 |------------------------------------------------------------------------------|
 
 - Everything between brackets are placeholders. Ex: The [Featured or top result badge] placeholder should not have this text; it should be displayed as a badge if the result is either a featured or top result.
-- The field for the video duration is @ytvideoduration. Unfortunately, due to a framework limitation, you will not be able to format the duration as MM:SS. However, we expect to see to total number of seconds. Ex: 179 sec
+- The field for the video durati. Unfortunately, due to a framework limitation, you will not be able to format the duration as MM:SS. However, we expect to see to total number of seconds. Ex: 179 sec
 - The field for the thumbnail is @ytthumbnailurl.
 - Try to make the result template as mobile responsive as possible.
 
