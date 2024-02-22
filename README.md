@@ -6,7 +6,7 @@ Got the main part of the task done, but with a few complications :
 
 - **Badges Functionality**: Couldn't implement as intended. Attempted to add "Top Result" and "Featured" badges but faced issues.
   
-- **Field Retrievals**: Encountered difficulties retrieving certain fields directly (e.g., thumbnail, video duration). Used placeholders (e.g., cute dog image for thumbnails, static number for duration) to progress. The hyperlink functionality works as expected.
+- **Field Retrievals**: Encountered difficulties retrieving certain fields directly (e.g., thumbnail, video duration). Used placeholders (e.g., cute doggy image for thumbnails, static number for duration) to progress. The hyperlink functionality works as expected.
 
 ## Task 2: Filter for 2022 Content
 Successfully implemented after a detailed review of the Headless documentation. :) 
