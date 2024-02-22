@@ -1,0 +1,92 @@
+/* Style for top result */
+atomic-result.top-result {
+    border: 2px solid #007bff; /* Highlight color */
+    position: relative;
+  }
+  
+atomic-result.top-result::before {
+content: "Top Result";
+position: absolute;
+top: -10px;
+left: 10px;
+background: #007bff;
+color: white;
+padding: 2px 8px;
+border-radius: 5px;
+font-size: 0.8rem;
+}
+
+/* YouTube Card Customizations */
+.youtube-result {
+    display: grid;
+    grid-template-areas: 
+      "badge date"
+      "title thumbnail"
+      "excerpt thumbnail"
+      "duration thumbnail"
+      "uri uri";
+    grid-template-columns: 3fr 2fr;
+    gap: 10px;
+    border: 1px solid #ddd; /* Lighter border for a softer look */
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover */
+  }
+  
+  .youtube-result:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Enhanced shadow on hover for emphasis */
+  }
+  
+  /* Styling for specific elements within the YouTube card */
+  .youtube-result .badge, .youtube-result .date {
+    font-weight: bold;
+    color: #555; /* Darker text for better readability */
+  }
+  
+  .youtube-result .title {
+    font-size: 1.1rem;
+    color: #007BFF; /* YouTube-like blue for titles */
+  }
+  
+  .youtube-result .excerpt {
+    color: #666; /* Slightly lighter text for contrast */
+  }
+  
+  .youtube-result .thumbnail {
+    grid-row: 2 / span 3;
+    border-radius: 4px;
+    transition: opacity 0.3s ease; /* Smooth transition for thumbnail hover */
+  }
+  
+  .youtube-result .thumbnail:hover {
+    opacity: 0.8; /* Slight transparency effect on hover */
+  }
+  
+  .youtube-result .duration, .youtube-result .uri {
+    font-size: 0.9rem;
+    color: #333; /* Subtle text for metadata */
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 600px) {
+    .youtube-result {
+      grid-template-areas:
+        "badge"
+        "date"
+        "title"
+        "thumbnail"
+        "excerpt"
+        "duration"
+        "uri";
+      grid-template-columns: 1fr;
+    }
+    .youtube-result .thumbnail {
+      width: 100%;
+      height: auto; /* Adjust thumbnail size for smaller screens */
+      grid-row: auto;
+    }
+  }
+  
